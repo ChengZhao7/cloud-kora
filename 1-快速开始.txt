@@ -1,0 +1,154 @@
+# 云端转山 - GitHub Pages 快速开始
+
+## 🎯 3 步部署到 GitHub
+
+### 第 1 步：创建 GitHub 仓库（2分钟）
+
+1. 登录 https://github.com
+2. 点击右上角 "+" → "New repository"
+3. 填写：
+   - Repository name: `cloud-kora`
+   - 选择 **Public**（公开）
+   - ✅ 勾选 "Add a README file"
+4. 点击 "Create repository"
+
+### 第 2 步：上传文件（2分钟）
+
+1. 在仓库页面，点击 "Add file" → "Upload files"
+2. 把这两个文件拖进去：
+   - `index.html`
+   - `success.html`
+3. 底部写："初始提交"
+4. 点击 "Commit changes"
+
+### 第 3 步：启用 Pages（1分钟）
+
+1. 仓库页面 → "Settings"（设置）
+2. 左边找到 "Pages"
+3. Branch 选择：`main` + `/ (root)`
+4. 点击 "Save"
+5. **等待 2-3 分钟**
+
+✅ 完成！访问：`https://你的用户名.github.io/cloud-kora/`
+
+---
+
+## ⚠️ 表单配置（重要！）
+
+### 问题：GitHub Pages 不能处理表单
+
+### 解决：使用 Formspree（5分钟设置）
+
+#### 步骤 1：注册 Formspree
+1. 访问 https://formspree.io
+2. 点击 "Get Started Free"
+3. 用 GitHub 账号登录（最快）
+
+#### 步骤 2：创建表单
+1. 点击 "New Form"
+2. 名称：`Cloud Kora Waitlist`
+3. 复制你的表单 ID（形如：`xyzabc123`）
+
+#### 步骤 3：修改 index.html
+1. 在 GitHub 打开 `index.html`
+2. 点击铅笔图标✏️ 编辑
+3. 搜索：`YOUR_FORMSPREE_ID`（约第 240 行）
+4. 替换为：你的 Formspree ID
+5. 搜索：`YOUR_GITHUB_USERNAME`
+6. 替换为：你的 GitHub 用户名
+7. 点击 "Commit changes"
+
+示例：
+```html
+<!-- 修改前 -->
+<form action="https://formspree.io/f/YOUR_FORMSPREE_ID">
+<input name="_next" value="https://YOUR_GITHUB_USERNAME.github.io/cloud-kora/success.html">
+
+<!-- 修改后（假设用户名是 zhongliu，ID 是 xyz123） -->
+<form action="https://formspree.io/f/xyz123">
+<input name="_next" value="https://zhongliu.github.io/cloud-kora/success.html">
+```
+
+✅ 完成！现在表单可以正常工作了！
+
+---
+
+## 📊 查看提交数据
+
+1. 登录 Formspree
+2. 点击你的 "Cloud Kora Waitlist" 表单
+3. 看到所有用户提交的手机号/邮箱
+4. 可以导出为 CSV
+
+---
+
+## 🔄 更新网站
+
+### 方法：在 GitHub 网页直接编辑
+
+1. 打开仓库，点击要改的文件
+2. 点击铅笔图标✏️
+3. 修改内容
+4. 点击 "Commit changes"
+5. 等待 1-2 分钟自动部署
+
+---
+
+## ❓ 常见问题
+
+### Q: 看不到网站？
+- 等待 2-3 分钟（首次部署慢）
+- 强制刷新：Ctrl + Shift + R
+
+### Q: 表单提交后没反应？
+- 确认已替换 `YOUR_FORMSPREE_ID`
+- 确认已替换 `YOUR_GITHUB_USERNAME`
+- 检查 ID 是否正确
+
+### Q: 统计数字不对？
+- 统计用浏览器本地存储
+- 每个人看到的数字略有不同
+- 这是正常的
+
+### Q: 想改初始统计数字？
+编辑 index.html 约 470 行：
+```javascript
+let stats = JSON.parse(localStorage.getItem(STATS_KEY) || '{"visits":1250,"reserves":187,"lastDate":""}');
+```
+改 `visits:1250` 和 `reserves:187`
+
+---
+
+## 🌟 进阶：绑定自己的域名
+
+如果你有域名（如 cloudkora.com）：
+
+1. 域名服务商添加记录：
+   ```
+   类型: CNAME
+   名称: www
+   值: 你的用户名.github.io
+   ```
+
+2. GitHub Settings → Pages：
+   - 输入：`www.cloudkora.com`
+   - ✅ Enforce HTTPS
+
+---
+
+## 🚀 推荐配置
+
+| 项目 | 推荐方案 | 费用 |
+|------|---------|------|
+| 托管 | GitHub Pages | 免费 |
+| 表单 | Formspree | 免费50次/月 |
+| 域名 | 阿里云/腾讯云 | ¥30-50/年 |
+| CDN | Cloudflare | 免费 |
+
+---
+
+## 📞 需要帮助？
+
+遇到问题随时说！
+
+祝部署顺利！🙏

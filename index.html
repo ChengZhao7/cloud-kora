@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>云端转山 Cloud Kora - 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Serif+SC:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Tibetan&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'tibetan-blue': '#0F172A',
+                        'tibetan-dark': '#020617',
+                        'merit-gold': '#D4AF37',
+                        'snow-white': '#F8FAFC',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['"Noto Serif SC"', '"Playfair Display"', 'serif'],
+                        tibetan: ['"Noto Sans Tibetan"', '"Microsoft Himalaya"', 'sans-serif'],
+                    },
+                    animation: {
+                        'spin-slow': 'spin 15s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #020617;
+            color: #F8FAFC;
+            scroll-behavior: smooth;
+            /* 为底部状态栏留出空间 */
+            padding-bottom: 40px; 
+        }
+        
+        .hero-bg {
+            background-color: #1e293b;
+            background-image: 
+                linear-gradient(to bottom, rgba(2,6,23,0.8) 0%, rgba(2,6,23,0.1) 25%, rgba(2,6,23,0.1) 60%, rgba(2,6,23,1) 100%),
+                url('https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=2076&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center 35%;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .hero-text-shadow { text-shadow: 0 4px 12px rgba(0,0,0,0.8); }
+        .tibetan-text-shadow { text-shadow: 0 0 20px rgba(212, 175, 55, 0.8); }
+        .fade-text { transition: opacity 0.3s ease; }
+        .opacity-0 { opacity: 0; }
+
+        .iphone-frame {
+            box-shadow: 0 0 0 8px #1a1a1a, 0 0 0 10px #4a4a4a, 0 20px 50px rgba(0,0,0,0.6);
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+            aspect-ratio: 9/19.5;
+        }
+        .iphone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 24px;
+            background: #1a1a1a;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 20;
+        }
+        
+        input::placeholder {
+            color: #6b7280; 
+        }
+    </style>
+</head>
+<body class="antialiased font-sans overflow-x-hidden">
+
+    <nav class="fixed w-full z-50 top-0 p-4 md:p-6 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent transition-all duration-300">
+        <div class="text-xl font-serif font-bold tracking-widest flex items-center gap-2 drop-shadow-lg text-white">
+            <i class="fa-solid fa-dharmachakra text-merit-gold animate-spin-slow"></i>
+            <span data-key="nav_logo">云端转山</span>
+        </div>
+        
+        <div class="flex items-center gap-3 md:gap-5">
+            <div class="flex items-center bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/10">
+                <button onclick="setLanguage('zh')" id="lang-zh" class="px-3 py-1 rounded-full text-[10px] md:text-xs font-bold transition-all duration-300">中</button>
+                <div class="w-[1px] h-3 bg-white/20"></div>
+                <button onclick="setLanguage('en')" id="lang-en" class="px-3 py-1 rounded-full text-[10px] md:text-xs font-bold transition-all duration-300 text-gray-400 hover:text-white">EN</button>
+                <div class="w-[1px] h-3 bg-white/20"></div>
+                <button onclick="setLanguage('bo')" id="lang-bo" class="px-3 py-1 rounded-full text-[10px] md:text-xs font-bold transition-all duration-300 font-tibetan text-gray-400 hover:text-white">བོད་</button>
+            </div>
+            <a href="#join" class="bg-white/10 hover:bg-white hover:text-tibetan-dark backdrop-blur px-5 py-2 rounded-full text-xs md:text-sm transition border border-white/20 text-white shadow-sm font-bold"><span data-key="nav_join">加入公测</span></a>
+        </div>
+    </nav>
+
+    <section class="relative min-h-screen flex flex-col md:flex-row items-center justify-center px-4 hero-bg pt-24 pb-12">
+        <div class="relative z-10 max-w-2xl text-center md:text-left md:pr-16 mb-16 md:mb-0">
+            <div class="font-tibetan text-3xl md:text-5xl text-merit-gold/90 mb-6 tibetan-text-shadow tracking-widest animate-pulse-slow md:text-left">ཨོཾ་མ་ཎི་པདྨེ་ཧཱུྃ</div>
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-merit-gold/60 bg-black/60 text-merit-gold text-xs tracking-[0.15em] uppercase mb-8 backdrop-blur-md shadow-lg font-bold">
+                <span class="w-2 h-2 bg-merit-gold rounded-full animate-pulse"></span><span data-key="hero_tag">2026 藏历火马年限定</span>
+            </div>
+            <h1 class="text-4xl md:text-7xl font-serif font-bold leading-tight hero-text-shadow tracking-tight mb-8">
+                <span data-key="hero_title_1">身体在红尘</span><br>
+                <span class="text-white relative inline-block mt-2">
+                    <span data-key="hero_title_2">灵魂在冈仁波齐</span>
+                    <svg class="absolute w-full h-3 -bottom-1 left-0 text-merit-gold opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="2" fill="none" /></svg>
+                </span>
+            </h1>
+            <p class="text-gray-100 text-lg md:text-2xl font-light leading-relaxed hero-text-shadow font-serif mb-10">
+                <span data-key="hero_desc">你的每一步，都将化作神山脚下的功德</span><br>
+                <span class="text-merit-gold text-base mt-2 block opacity-90 font-sans tracking-wide" data-key="hero_sub_desc">免费下载 · 步数同步 · 赛博修行</span>
+            </p>
+            <div class="flex flex-col md:flex-row gap-6 justify-center md:justify-start">
+                <a href="#join" class="group relative px-10 py-4 bg-merit-gold text-tibetan-dark font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(212,175,55,0.6)] shadow-2xl">
+                    <span class="relative z-10 flex items-center gap-2"><span data-key="cta_waitlist">开始修行</span> <i class="fa-solid fa-arrow-right"></i></span>
+                </a>
+            </div>
+        </div>
+        <div class="relative z-10 w-[280px] md:w-[340px] animate-float shrink-0">
+            <div class="iphone-frame">
+                <div class="iphone-notch"></div>
+                <img src="https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover opacity-95 hover:opacity-100 transition duration-700" alt="App UI Placeholder">
+            </div>
+            <div class="absolute -inset-4 bg-merit-gold/20 rounded-[50px] blur-2xl -z-10 animate-pulse-slow"></div>
+        </div>
+    </section>
+
+    <section class="py-24 px-4 bg-[#030817] relative z-20 shadow-[0_-50px_100px_rgba(2,6,23,1)] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-20 text-center">
+                <span class="text-merit-gold text-xs font-bold tracking-widest uppercase mb-2 block" data-key="feat_tag">JOURNEY</span>
+                <h2 class="text-3xl md:text-5xl font-serif font-bold mb-6 text-white hero-text-shadow" data-key="feat_title">万水千山，皆是道场</h2>
+                <div class="w-24 h-1 bg-merit-gold mx-auto rounded-full"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 auto-rows-[minmax(340px,auto)]">
+                <div class="glass-card rounded-[2rem] p-10 col-span-1 md:col-span-2 relative overflow-hidden group hover:border-merit-gold/60 transition-all hover:-translate-y-2 hover:shadow-2xl">
+                    <div class="absolute top-0 right-0 p-8 opacity-5 text-[12rem] group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700 grayscale text-white">🏔️</div>
+                    <div class="relative z-10 h-full flex flex-col justify-end">
+                        <div class="w-16 h-16 bg-gradient-to-br from-merit-gold/30 to-transparent rounded-2xl flex items-center justify-center mb-6 text-merit-gold text-3xl border border-merit-gold/30 shadow-inner"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h3 class="text-3xl font-bold mb-4 text-white" data-key="card1_title">选择你的神山</h3>
+                        <p class="text-gray-300 text-lg leading-relaxed mb-6" data-key="card1_desc">不仅是冈仁波齐。App 内置多条经典转山路线，每座神山对应不同的修行难度与心境。</p>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-gray-300" data-key="mount_1">梅里雪山 · 20万步</span>
+                            <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-gray-300" data-key="mount_2">纳木错 · 50万步</span>
+                            <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-gray-300" data-key="mount_4">南迦巴瓦 · 30万步</span>
+                            <span class="px-3 py-1 bg-merit-gold/20 border border-merit-gold/30 rounded-full text-xs text-merit-gold font-bold" data-key="mount_3">冈仁波齐 · 100万步</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card rounded-[2rem] p-10 col-span-1 relative overflow-hidden group hover:border-merit-gold/60 transition-all hover:-translate-y-2 hover:shadow-2xl bg-gradient-to-b from-white/5 to-transparent">
+                    <div class="relative z-10 h-full flex flex-col justify-between">
+                        <div class="flex justify-between items-start">
+                            <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white text-2xl border border-white/20 shadow-inner"><i class="fa-solid fa-shoe-prints"></i></div>
+                            <span class="text-[10px] border border-merit-gold/50 text-merit-gold px-3 py-1 rounded-full uppercase tracking-wider font-bold bg-merit-gold/10">Sync</span>
+                        </div>
+                        <div class="mt-8">
+                            <h3 class="text-3xl font-bold mb-4 text-white" data-key="card2_title">步数即修行</h3>
+                            <p class="text-gray-300 text-lg leading-relaxed"><span data-key="card2_desc">接入 HealthKit。你在城市的每一步，都将缩短与神山的距离。</span><span class="text-sm opacity-60 mt-4 block" data-key="card2_note">无需打开App，后台自动积累。</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card rounded-[2rem] p-10 col-span-1 relative overflow-hidden group hover:border-merit-gold/60 transition-all hover:-translate-y-2 hover:shadow-2xl">
+                    <div class="absolute -right-20 -bottom-20 w-60 h-60 bg-merit-gold/20 rounded-full blur-[100px] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="relative z-10">
+                        <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white text-2xl mb-8 border border-white/20 shadow-inner"><i class="fa-solid fa-microphone-lines"></i></div>
+                        <h3 class="text-3xl font-bold mb-4 text-white" data-key="card3_title">来自拉萨的风</h3>
+                        <p class="text-gray-300 text-lg leading-relaxed" data-key="card3_desc">拒绝罐头音效。所有白噪音皆由开发者在大昭寺、纳木错实地收录。</p>
+                    </div>
+                </div>
+                <div class="glass-card rounded-[2rem] p-10 col-span-1 md:col-span-2 relative overflow-hidden flex items-center bg-gradient-to-r from-merit-gold/20 via-merit-gold/5 to-transparent border-merit-gold/40 hover:border-merit-gold transition-all hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(212,175,55,0.4)]">
+                    <div class="mr-10 text-6xl text-merit-gold drop-shadow-[0_0_25px_rgba(212,175,55,0.8)]"><i class="fa-solid fa-fire-flame-curved animate-pulse"></i></div>
+                    <div>
+                        <h3 class="text-3xl font-bold text-merit-gold mb-3" data-key="card4_title">2026 藏历火马年</h3>
+                        <p class="text-gray-100 text-lg" data-key="card4_desc">错过再等 60 年。期间完成冈仁波齐转山，获得专属 NFT 功德证书。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dev" class="py-24 px-4 text-center bg-[#030817] relative z-10">
+        <div class="max-w-3xl mx-auto">
+            <i class="fa-solid fa-quote-left text-4xl text-merit-gold/20 mb-8 block"></i>
+            <p class="text-xl md:text-3xl font-serif text-white leading-relaxed italic mb-12 tracking-wide hero-text-shadow leading-loose" data-key="dev_quote">“常居圣城拉萨，看窗外念青唐古拉山的雪积了一层又一层，听大昭寺经幡在风中猎猎作响。我常思考——如何在这个喧嚣的数字世界里，用代码为大家建一座安静的神山。”</p>
+            <div class="flex flex-col items-center justify-center gap-6">
+                <div class="w-20 h-20 rounded-full p-1 border-4 border-merit-gold/40 shadow-[0_0_30px_rgba(212,175,55,0.3)] bg-[#0F172A] relative group overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1454496522488-7a8e488e8606?q=80&w=400&auto=format&fit=crop" alt="Mount Kailash Developer" class="w-full h-full rounded-full object-cover transition-all duration-700 group-hover:scale-110 opacity-90 hover:opacity-100">
+                </div>
+                <div class="text-center">
+                    <div class="font-bold text-white tracking-wider text-lg mb-1 font-serif" data-key="dev_name">独立开发者 · 钟流</div>
+                    <div class="text-xs text-gray-500">Lhasa, Tibet</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="join" class="py-32 px-4 bg-gradient-to-b from-[#030817] to-black border-t border-white/5 relative z-20">
+        <div class="max-w-2xl mx-auto text-center">
+            <h2 class="text-3xl md:text-5xl font-bold mb-8 text-white font-serif" data-key="join_title">准备好启程了吗？</h2>
+            <p class="text-gray-400 mb-12 text-lg leading-relaxed max-w-xl mx-auto" data-key="join_desc_dual">App 正在封闭开发中。<br>请留下您的<span class="text-merit-gold">手机号</span>或<span class="text-merit-gold">电子邮箱</span>（任选其一）。<br>我们将在第一时间邀请您参与内测。</p>
+
+            <form name="cloud-kora-waitlist" method="POST" data-netlify="true" action="/success.html" class="max-w-md mx-auto space-y-6">
+                
+                <div class="relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-merit-gold via-yellow-600 to-merit-gold rounded-full blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                    <div class="relative flex items-center bg-black/60 border border-white/20 rounded-full overflow-hidden focus-within:border-merit-gold transition-colors">
+                        <span class="pl-6 text-gray-500"><i class="fa-solid fa-mobile-screen"></i></span>
+                        <input type="tel" name="phone" id="user-phone" placeholder="手机号码..." data-key-placeholder="phone_placeholder" class="w-full px-4 py-4 bg-transparent text-white focus:outline-none placeholder-gray-500 font-sans">
+                    </div>
+                </div>
+
+                <div class="relative flex py-1 items-center opacity-50">
+                    <div class="flex-grow border-t border-white/10"></div>
+                    <span class="flex-shrink mx-4 text-gray-500 text-xs tracking-widest uppercase" data-key="join_or">OR</span>
+                    <div class="flex-grow border-t border-white/10"></div>
+                </div>
+
+                <div class="relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-merit-gold via-yellow-600 to-merit-gold rounded-full blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                    <div class="relative flex items-center bg-black/60 border border-white/20 rounded-full overflow-hidden focus-within:border-merit-gold transition-colors">
+                        <span class="pl-6 text-gray-500"><i class="fa-solid fa-envelope"></i></span>
+                        <input type="email" name="email" id="user-email" placeholder="电子邮箱..." data-key-placeholder="email_placeholder" class="w-full px-4 py-4 bg-transparent text-white focus:outline-none placeholder-gray-500 font-sans">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-4 bg-merit-gold text-tibetan-dark font-bold text-lg rounded-full hover:bg-white hover:scale-[1.02] transition-all shadow-lg mt-8" data-key="join_btn">加入等待名单</button>
+            </form>
+            <div class="mt-16 flex justify-center gap-8 opacity-30 grayscale hover:grayscale-0 transition-all duration-500"><i class="fa-brands fa-apple text-3xl text-white"></i><i class="fa-brands fa-android text-3xl text-white"></i></div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center text-gray-700 text-xs bg-black border-t border-white/5 font-serif"><p>&copy; 2026 Cloud Kora Studio. Lhasa.</p></footer>
+
+    <div id="stats-bar" class="fixed bottom-0 w-full bg-black/80 backdrop-blur-md z-50 py-3 text-[10px] md:text-xs text-gray-400 flex justify-center items-center gap-6 md:gap-10 border-t border-white/5 font-sans animate-pulse-slow">
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-eye text-merit-gold/70"></i>
+            <span><span id="visit-count" class="text-merit-gold font-bold">Loading...</span> <span data-key="stat_visits">位朝圣者来访</span></span>
+        </div>
+        <div class="w-[1px] h-3 bg-white/10"></div>
+        <div class="flex items-center gap-2">
+            <i class="fa-solid fa-users text-merit-gold/70"></i>
+            <span><span id="reserve-count" class="text-merit-gold font-bold">Loading...</span> <span data-key="stat_reserves">人已加入队伍</span></span>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            zh: {
+                nav_logo: "云端转山",
+                nav_join: "加入公测",
+                hero_tag: "2026 藏历火马年限定",
+                hero_title_1: "身体在红尘",
+                hero_title_2: "灵魂在冈仁波齐",
+                hero_desc: "你的每一步，都将化作神山脚下的功德",
+                hero_sub_desc: "免费下载 · 步数同步 · 赛博修行",
+                cta_waitlist: "开始修行",
+                feat_tag: "JOURNEY",
+                feat_title: "万水千山，皆是道场",
+                card1_title: "选择你的神山",
+                card1_desc: "不仅是冈仁波齐。App 内置多条经典转山路线，每座神山对应不同的修行难度与心境。",
+                mount_1: "梅里雪山 · 20万步",
+                mount_2: "纳木错 · 50万步",
+                mount_3: "冈仁波齐 · 100万步",
+                mount_4: "南迦巴瓦 · 30万步",
+                card2_title: "步数即修行",
+                card2_desc: "接入 HealthKit。你在城市的每一步，都将缩短与神山的距离。",
+                card2_note: "无需打开App，后台自动积累。",
+                card3_title: "来自拉萨的风",
+                card3_desc: "拒绝罐头音效。所有白噪音皆由开发者在大昭寺、纳木错实地收录。",
+                card4_title: "2026 藏历火马年",
+                card4_desc: "错过再等 60 年。期间完成冈仁波齐转山，获得专属 NFT 功德证书。",
+                dev_quote: "“常居圣城拉萨，看窗外念青唐古拉山的雪积了一层又一层，听大昭寺经幡在风中猎猎作响。我常思考——如何在这个喧嚣的数字世界里，用代码为大家建一座安静的神山。”",
+                dev_name: "独立开发者 · 钟流",
+                join_title: "准备好启程了吗？",
+                join_desc_dual: "App 正在封闭开发中。<br>请留下您的<span class='text-merit-gold'>手机号</span>或<span class='text-merit-gold'>电子邮箱</span>（任选其一）。<br>我们将在第一时间邀请您参与内测。",
+                phone_placeholder: "手机号码...",
+                email_placeholder: "电子邮箱...",
+                join_or: "或",
+                join_btn: "加入等待名单",
+                stat_visits: "位朝圣者来访",
+                stat_reserves: "人已加入队伍"
+            },
+            en: {
+                nav_logo: "CLOUD KORA",
+                nav_join: "Join Beta",
+                hero_tag: "2026 Fire Horse Year Exclusive",
+                hero_title_1: "Body in the Dust",
+                hero_title_2: "Soul at Mount Kailash",
+                hero_desc: "Turn every step you take into merit at the foot of the sacred mountain",
+                hero_sub_desc: "Free Download · Steps Sync · Cyber Pilgrimage",
+                cta_waitlist: "Start Pilgrimage",
+                feat_tag: "JOURNEY",
+                feat_title: "The World is Your Dojo",
+                card1_title: "Choose Your Mountain",
+                card1_desc: "Not just Kailash. Multiple classic pilgrimage routes are built-in, each representing a different difficulty and state of mind.",
+                mount_1: "Meili Snow Mtn · 200k Steps",
+                mount_2: "Namtso Lake · 500k Steps",
+                mount_3: "Mt. Kailash · 1M Steps",
+                mount_4: "Namcha Barwa · 300k Steps",
+                card2_title: "Steps are Merit",
+                card2_desc: "Syncs with HealthKit. Every step you take in the city brings you closer to the sacred mountain.",
+                card2_note: "Works in background. No need to open App.",
+                card3_title: "Wind from Lhasa",
+                card3_desc: "No stock sounds. All white noise is recorded by the developer on-site at Jokhang Temple and Namtso.",
+                card4_title: "2026 Fire Horse Year",
+                card4_desc: "A once-in-60-years opportunity. Complete the Kora this year to earn an exclusive NFT Merit Certificate.",
+                dev_quote: "“Living in the holy city of Lhasa, watching the snow pile up on the Nyenchen Tanglha, listening to the prayer flags fluttering at Jokhang Temple... I often ponder: How to use code to build a quiet sacred mountain for everyone in this noisy digital world.”",
+                dev_name: "Indie Developer · Zhong Liu",
+                join_title: "Ready to Depart?",
+                join_desc_dual: "App is in closed beta.<br>Please leave your <span class='text-merit-gold'>Phone Number</span> or <span class='text-merit-gold'>Email</span> (choose one).<br>We will invite you to the beta ASAP.",
+                phone_placeholder: "Phone Number...",
+                email_placeholder: "Email Address...",
+                join_or: "OR",
+                join_btn: "Join Waitlist",
+                stat_visits: "Pilgrims Visited",
+                stat_reserves: "Joined the Queue"
+            },
+            bo: {
+                nav_logo: "སྤྲིན་པའི་སྐོར་ར།", 
+                nav_join: "ཚོད་ལྟར་ཞུགས་པ།", 
+                hero_tag: "༢༠༢༦ མེ་རྟ་ལོའི་དྲན་རྟེན།", 
+                hero_title_1: "ལུས་པོ་འཁོར་བར་གནས།", 
+                hero_title_2: "སེམས་པ་གངས་རིན་པོ་ཆེར་གཏད།", 
+                hero_desc: "ཁྱེད་ཀྱི་གོམ་པ་རེ་རེ་བཞིན། གངས་རིན་པོ་ཆེའི་ཞབས་ཀྱི་བསོད་ནམས་སུ་འགྱུར།", 
+                hero_sub_desc: "རིན་མེད་ཕབ་ལེན། · གོམ་གྲངས་མཉམ་འཇུག · དྲ་ཐོག་ཉམས་ལེན།", 
+                cta_waitlist: "སྐོར་ར་འགོ་འཛུགས་པ།", 
+                feat_tag: "འགྲུལ་བཞུད།",
+                feat_title: "རི་ཆུ་ཁྲི་སྟོང་། ཚང་མ་ཆོས་ར་ཡིན།",
+                card1_title: "རང་གི་གནས་རི་འདེམས་པ།",
+                card1_desc: "གངས་རིན་པོ་ཆེ་གཅིག་པུ་མིན། གནས་སྐོར་ལམ་ཐིག་མང་པོ་ཡོད།",
+                mount_1: "ཁ་བ་དཀར་པོ། · གོམ་པ་ཁྲི་༢༠",
+                mount_2: "གནམ་མཚོ། · གོམ་པ་ཁྲི་༥༠",
+                mount_3: "གངས་རིན་པོ་ཆེ། · གོམ་པ་ས་ཡ་༡",
+                mount_4: "གནམ་ལྕགས་འབར་བ། · གོམ་པ་ཁྲི་༣༠",
+                card2_title: "གོམ་པ་རེ་རེ་ནི་ཉམས་ལེན་ཡིན།",
+                card2_desc: "HealthKit དང་མཐུད་ཡོད། གྲོང་ཁྱེར་ནང་གི་གོམ་པ་རེ་རེས། གནས་རི་དང་བར་ཐག་ཇེ་ཉེར་གཏོང་།",
+                card2_note: "རྒྱབ་ཏུ་རང་བཞིན་གྱིས་གསོག་འཇོག་བྱེད།",
+                card3_title: "ལྷ་ས་ནས་ཡོང་བའི་རླུང་།",
+                card3_desc: "ཇོ་ཁང་དང་གནམ་མཚོ་ནས་དངོས་སུ་བླངས་པའི་སྒྲ་དབྱངས་ཡིན།",
+                card4_title: "༢༠༢༦ མེ་རྟ་ལོ།",
+                card4_desc: "ལོ་༦༠ ལ་ཐེངས་གཅིག་ཡིན། གངས་རིན་པོ་ཆེར་སྐོར་བ་བརྒྱབ་ན། དྲ་ཐོག་གི་བསོད་ནམས་ལག་ཁྱེར་ཐོབ་ཐུབ།",
+                dev_quote: "“ལྷ་ས་རུ་སྡོད་སྐབས། སྒེའུ་ཁུང་ཕྱི་རོལ་གྱི་གངས་རི་དང་། ཇོ་ཁང་གི་དར་ལྕོག་གི་སྒྲ་ཐོས་དུས། ངས་དུས་རྒྱུན་དུ་བསམ་བློ་གཏོང་གི་ཡོད། ང་ཚོས་ཇི་ལྟར་འདུ་འཛི་ཆེ་བའི་དྲ་རྒྱའི་འཇིག་རྟེན་འདིར། ཞི་འཇགས་ཀྱི་རི་བོ་ཞིག་བསྐྲུན་དགོས་སམ།”",
+                dev_name: "རང་དབང་གསར་གཏོད་པ། · ཀྲུང་ལིའུ།", 
+                join_title: "གྲ་སྒྲིག་ཨང་གསར་རམ།",
+                join_desc_dual: "མཉེན་ཆས་ད་ལྟ་བཟོ་བཞིན་པའི་སྒང་ཡིན། <br>ཁྱེད་ཀྱི་<span class='text-merit-gold'>ཁ་པར་ཨང་གྲངས</span>སམ་<span class='text-merit-gold'>གློག་འཕྲིན་ཁ་བྱང</span>(གང་རུང་གཅིག)འདིར་འཇོག་རོགས། <br>ང་ཚོས་དུས་ཐོག་ཏུ་ཁྱེད་རང་ནང་ཁུལ་ཚོད་ལྟར་གདན་འདྲེན་ཞུ་རྒྱུ་ཡིན།",
+                phone_placeholder: "ཁ་པར་ཨང་གྲངས...",
+                email_placeholder: "གློག་འཕྲིན་ཁ་བྱང...",
+                join_or: "ཡང་ན།",
+                join_btn: "སྒུག་ཐོའི་ནང་འཛུལ་བ།",
+                stat_visits: "གནས་མཇལ་བ་ཕེབས་པ།",
+                stat_reserves: "རུ་ཁག་ནང་ཞུགས་པ།"
+            }
+        };
+
+        let currentLang = 'zh';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            ['zh', 'en', 'bo'].forEach(l => {
+                const btn = document.getElementById(`lang-${l}`);
+                if (l === lang) {
+                    btn.classList.remove('text-gray-400', 'hover:text-white');
+                    btn.classList.add('bg-merit-gold', 'text-tibetan-dark', 'shadow-sm');
+                } else {
+                    btn.classList.add('text-gray-400', 'hover:text-white');
+                    btn.classList.remove('bg-merit-gold', 'text-tibetan-dark', 'shadow-sm');
+                }
+            });
+            if (lang === 'bo') {
+                document.body.classList.add('font-tibetan');
+            } else {
+                document.body.classList.remove('font-tibetan');
+            }
+            updateContent(lang);
+            localStorage.setItem('cloud_kora_lang_v7', lang);
+        }
+
+        function updateContent(lang) {
+            const data = translations[lang];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (data[key]) {
+                    if (key === 'stat_visits' || key === 'stat_reserves') {
+                        el.innerHTML = data[key];
+                    } else {
+                        el.classList.add('opacity-0', 'fade-text');
+                        setTimeout(() => {
+                            el.innerHTML = data[key];
+                            el.classList.remove('opacity-0');
+                        }, 300);
+                    }
+                }
+            });
+            document.querySelectorAll('[data-key-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-key-placeholder');
+                if (data[key]) {
+                    el.placeholder = data[key];
+                }
+            });
+        }
+
+        // 智能模拟数据生成器
+        function initSmartStats() {
+            const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+            const baseSeed = parseInt(today.substring(2)) * 13; 
+            let visits = parseInt(localStorage.getItem('kora_visits_v1')) || (baseSeed + Math.floor(Math.random() * 500));
+            let reserves = parseInt(localStorage.getItem('kora_reserves_v1')) || (Math.floor(visits * 0.12) + Math.floor(Math.random() * 50));
+            visits += Math.floor(Math.random() * 5) + 1;
+            if (Math.random() > 0.7) {
+                reserves += 1;
+            }
+            localStorage.setItem('kora_visits_v1', visits);
+            localStorage.setItem('kora_reserves_v1', reserves);
+            animateValue('visit-count', visits);
+            animateValue('reserve-count', reserves);
+        }
+
+        function animateValue(id, end) {
+            const obj = document.getElementById(id);
+            const start = parseInt(obj.innerText.replace(/,/g, '')) || 0;
+            if (start === end) return;
+            let current = start;
+            const range = end - start;
+            const stepTime = Math.abs(Math.floor(1500 / range));
+            const timer = setInterval(() => {
+                current += 1;
+                obj.innerText = current.toLocaleString();
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const snowContainer = document.getElementById('snow');
+            const particleCount = 40;
+            for (let i = 0; i < particleCount; i++) {
+                const snow = document.createElement('div');
+                snow.style.position = 'absolute';
+                snow.style.top = Math.random() * 100 + '%';
+                snow.style.left = Math.random() * 100 + '%';
+                snow.style.width = Math.random() * 2 + 1 + 'px';
+                snow.style.height = snow.style.width;
+                snow.style.backgroundColor = '#FFF';
+                snow.style.borderRadius = '50%';
+                snow.style.boxShadow = '0 0 4px rgba(255,255,255,0.8)';
+                snow.style.animation = `fall ${Math.random() * 20 + 10}s linear infinite, sway ${Math.random() * 8 + 4}s ease-in-out infinite alternate`;
+                snowContainer.appendChild(snow);
+            }
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fall {
+                    0% { transform: translateY(-10vh); opacity: 0; }
+                    10% { opacity: 0.8; }
+                    100% { transform: translateY(110vh); opacity: 0; }
+                }
+                @keyframes sway {
+                    0% { margin-left: -10px; }
+                    100% { margin-left: 10px; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            const savedLang = localStorage.getItem('cloud_kora_lang_v7');
+            if (savedLang && ['zh', 'en', 'bo'].includes(savedLang)) {
+                setLanguage(savedLang);
+            } else {
+                setLanguage('zh');
+            }
+
+            // 启动底部统计
+            initSmartStats();
+        });
+    </script>
+</body>
+</html>
